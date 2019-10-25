@@ -8,14 +8,16 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
 import com.example.barcodedemo.api.ApiHelper;
 import com.example.barcodedemo.api.OnDataCallback;
-import com.example.barcodedemo.api.models.BarcodeModelList;
 import com.example.barcodedemo.api.models.BarcodeModel;
+import com.example.barcodedemo.api.models.BarcodeModelList;
 import com.example.barcodedemo.utils.Constants;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
@@ -104,25 +106,34 @@ public class ScannerActivity extends AppCompatActivity {
                 public void onSuccess(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
                     for (FirebaseVisionBarcode barcode :
                             firebaseVisionBarcodes) {
-                        System.out.println(barcode.getRawValue() + "PREPOZNAO");
-                        ApiHelper.getInstance(Constants.API_SELECTION_UPCITEMDB).itemLookupUPCItemDB(barcode.getRawValue(), new OnDataCallback<BarcodeModelList>() {
-                            @Override
-                            public void onSuccess(BarcodeModelList data) {
-                                BarcodeModel item = data.getItems().get(Constants.INDEX_FIRST);
-                                if (item == null) {
-                                    checkUPCDatabase(barcode);
-                                }
-                            }
-
-                            @Override
-                            public void onFailure(String message) {
-                                checkUPCDatabase(barcode);
-                            }
-                        });
+                        checkUPCItemDB(barcode);
                     }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    System.out.println("BARCODE DETECTION FAILED"); //
                 }
             });
         }
+    }
+
+    private void checkUPCItemDB(FirebaseVisionBarcode barcode) {
+        ApiHelper.getInstance(Constants.API_SELECTION_UPCITEMDB).itemLookupUPCItemDB(barcode.getRawValue(), new OnDataCallback<BarcodeModelList>() {
+            @Override
+            public void onSuccess(BarcodeModelList data) {
+                BarcodeModel item = data.getItems().get(Constants.INDEX_FIRST);
+                //   if (item == null) {
+                checkUPCDatabase(barcode);
+                //   }
+            }
+
+            @Override
+            public void onFailure(String message) {
+                checkUPCDatabase(barcode);
+            }
+        });
+
     }
 
     private void checkUPCDatabase(FirebaseVisionBarcode barcode) {

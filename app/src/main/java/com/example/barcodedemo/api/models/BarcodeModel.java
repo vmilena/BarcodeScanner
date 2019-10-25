@@ -8,7 +8,7 @@ import java.util.List;
 public class BarcodeModel {
     @SerializedName("title")
     private String name;
-    @SerializedName(value = "price", alternate = {"lowest_recorded_price", "mrsp"})
+    @SerializedName(value = "price", alternate = {"lowest_recorded_price", "msrp"})
     private float price;
     private String description;
     @SerializedName("images")
