@@ -3,7 +3,6 @@ package com.example.barcodedemo;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,6 +11,11 @@ import android.provider.MediaStore;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
+import com.example.barcodedemo.api.ApiHelper;
+import com.example.barcodedemo.api.OnDataCallback;
+import com.example.barcodedemo.api.models.BarcodeModelList;
+import com.example.barcodedemo.api.models.BarcodeModel;
+import com.example.barcodedemo.utils.Constants;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
@@ -26,11 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import javax.xml.transform.Source;
-
 import butterknife.ButterKnife;
-
-import static android.graphics.ImageDecoder.createSource;
 
 public class ScannerActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
@@ -104,11 +104,39 @@ public class ScannerActivity extends AppCompatActivity {
                 public void onSuccess(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
                     for (FirebaseVisionBarcode barcode :
                             firebaseVisionBarcodes) {
-                        System.out.println(barcode.getDisplayValue());
+                        System.out.println(barcode.getRawValue() + "PREPOZNAO");
+                        ApiHelper.getInstance(Constants.API_SELECTION_UPCITEMDB).itemLookupUPCItemDB(barcode.getRawValue(), new OnDataCallback<BarcodeModelList>() {
+                            @Override
+                            public void onSuccess(BarcodeModelList data) {
+                                BarcodeModel item = data.getItems().get(Constants.INDEX_FIRST);
+                                if (item == null) {
+                                    checkUPCDatabase(barcode);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(String message) {
+                                checkUPCDatabase(barcode);
+                            }
+                        });
                     }
                 }
             });
         }
+    }
+
+    private void checkUPCDatabase(FirebaseVisionBarcode barcode) {
+        ApiHelper.getInstance(Constants.API_SELECTION_UPCDATABASE).itemLookupUPCDatabase(barcode.getRawValue(), new OnDataCallback<BarcodeModel>() {
+            @Override
+            public void onSuccess(BarcodeModel data) {
+                BarcodeModel item = data;
+                //TODO Check with third API
+            }
+
+            @Override
+            public void onFailure(String message) {
+            }
+        });
     }
 
     @Override
