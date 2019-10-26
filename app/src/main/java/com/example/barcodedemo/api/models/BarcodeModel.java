@@ -3,22 +3,35 @@ package com.example.barcodedemo.api.models;
 import com.example.barcodedemo.utils.Constants;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class BarcodeModel {
     @SerializedName("title")
     private String name;
-    @SerializedName(value = "price", alternate = {"lowest_recorded_price", "msrp"})
+    @SerializedName(value = "price", alternate = {"lowest_recorded_price", "msrp", "lowest_price"})
     private float price;
     private String description;
     @SerializedName("images")
     private List<String> imageUrls;
+    private String image;
 
     public BarcodeModel(String name, float price, String description, List<String> imageUrls) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.imageUrls = imageUrls;
+        this.image = imageUrls.get(Constants.INDEX_FIRST);
+    }
+
+
+    public BarcodeModel(String name, float price, String description, String image) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.imageUrls = new LinkedList<String>();
+        this.imageUrls.add(image);
+        this.image = image;
     }
 
     public String getName() {
@@ -51,5 +64,13 @@ public class BarcodeModel {
 
     public void setImageUrls(String imageUrl) {
         this.imageUrls = imageUrls;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }

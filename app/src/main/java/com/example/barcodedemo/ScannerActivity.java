@@ -15,6 +15,7 @@ import androidx.core.content.FileProvider;
 import com.example.barcodedemo.api.ApiHelper;
 import com.example.barcodedemo.api.OnDataCallback;
 import com.example.barcodedemo.api.models.BarcodeModel;
+import com.example.barcodedemo.api.models.BarcodeModelBarcodeSpider;
 import com.example.barcodedemo.api.models.BarcodeModelList;
 import com.example.barcodedemo.utils.Constants;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -99,14 +100,15 @@ public class ScannerActivity extends AppCompatActivity {
 
             FirebaseVisionBarcodeDetector detector =
                     FirebaseVision.getInstance().getVisionBarcodeDetector(options);
-
+            //TODO Specify type of barcode
             Task<List<FirebaseVisionBarcode>> task = detector.detectInImage(image);
             task.addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
                 @Override
                 public void onSuccess(List<FirebaseVisionBarcode> firebaseVisionBarcodes) {
                     for (FirebaseVisionBarcode barcode :
                             firebaseVisionBarcodes) {
-                        checkUPCItemDB(barcode);
+                        checkBarcodeSpider(barcode);
+                        //checkUPCItemDB(barcode);
                     }
                 }
             }).addOnFailureListener(new OnFailureListener() {
@@ -118,14 +120,15 @@ public class ScannerActivity extends AppCompatActivity {
         }
     }
 
-    private void checkUPCItemDB(FirebaseVisionBarcode barcode) {
+    private void checkUPCItemDB(FirebaseVisionBarcode barcode) { //No. 1 Calls checkUPCDatabase() if API falls short
         ApiHelper.getInstance(Constants.API_SELECTION_UPCITEMDB).itemLookupUPCItemDB(barcode.getRawValue(), new OnDataCallback<BarcodeModelList>() {
             @Override
             public void onSuccess(BarcodeModelList data) {
-                BarcodeModel item = data.getItems().get(Constants.INDEX_FIRST);
-                //   if (item == null) {
-                checkUPCDatabase(barcode);
-                //   }
+                if (data != null) {
+                    showProduct(data.getItems().get(Constants.INDEX_FIRST));
+                } else {
+                    checkUPCDatabase(barcode);
+                }
             }
 
             @Override
@@ -136,18 +139,46 @@ public class ScannerActivity extends AppCompatActivity {
 
     }
 
-    private void checkUPCDatabase(FirebaseVisionBarcode barcode) {
+    private void checkUPCDatabase(FirebaseVisionBarcode barcode) { //No. 2 Called by checkUPCItemDB(), and calls checkBarcodeSpider() if API falls short
         ApiHelper.getInstance(Constants.API_SELECTION_UPCDATABASE).itemLookupUPCDatabase(barcode.getRawValue(), new OnDataCallback<BarcodeModel>() {
             @Override
             public void onSuccess(BarcodeModel data) {
-                BarcodeModel item = data;
-                //TODO Check with third API
+                if (data != null) {
+                    showProduct(data);
+                } else {
+                    checkBarcodeSpider(barcode);
+                }
             }
 
             @Override
             public void onFailure(String message) {
+                checkBarcodeSpider(barcode);
             }
         });
+    }
+
+    private void checkBarcodeSpider(FirebaseVisionBarcode barcode) { //No.3 called by checkUPCDatabase()
+        ApiHelper.getInstance(Constants.API_SELECTION_BARCODESPIDER).itemLookupBarcodeSpider(barcode.getRawValue(), new OnDataCallback<BarcodeModelBarcodeSpider>() {
+            @Override
+            public void onSuccess(BarcodeModelBarcodeSpider data) {
+                if (data != null) {
+                    BarcodeModel item = data.getBarcodeModel();
+                    showProduct(data.getBarcodeModel());
+                } else {
+                    System.out.println("SCANNED BARCODE WAS NOT FOUND.");
+                }
+
+            }
+
+            @Override
+            public void onFailure(String message) {
+
+            }
+        });
+    }
+
+    private void showProduct(BarcodeModel data) {
+        //TODO What do we do with product info
     }
 
     @Override

@@ -5,9 +5,15 @@ public class Constants {
 
     public static final String BASE_URL_UPCITEMDB = "https://api.upcitemdb.com/prod/";
     public static final String BASE_URL_UPCDATABASE = "https://api.upcdatabase.org/";
+    public static final String BASE_URL_BARCODESPIDER = "https://api.barcodespider.com/v1/";
 
     public static final String API_SELECTION_UPCITEMDB = "upcitemdb";
-    public static final int INDEX_FIRST = 0;
+    public static final String API_SELECTION_BARCODESPIDER = "barcodespider";
     public static final String API_SELECTION_UPCDATABASE = "upcdatabase";
-    public static final String UPC_DATABASE_API_KEY = "E33A19C3D44DF48B5958AC976623D25C";
+    public static final int INDEX_FIRST = 0;
+
+
+    public static final String UPCDATABASE_API_KEY = "E33A19C3D44DF48B5958AC976623D25C";
+    public static final String BARCODESPIDER_API_KEY = "82171e2e8cec37c63979";
+
 }

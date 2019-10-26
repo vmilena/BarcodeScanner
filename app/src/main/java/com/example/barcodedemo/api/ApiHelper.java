@@ -1,6 +1,7 @@
 package com.example.barcodedemo.api;
 
 import com.example.barcodedemo.api.models.BarcodeModel;
+import com.example.barcodedemo.api.models.BarcodeModelBarcodeSpider;
 import com.example.barcodedemo.api.models.BarcodeModelList;
 import com.example.barcodedemo.utils.Constants;
 import com.google.gson.Gson;
@@ -43,6 +44,10 @@ public class ApiHelper {
             }
             case Constants.API_SELECTION_UPCDATABASE: {
                 retrofit = getAdapter(Constants.BASE_URL_UPCDATABASE, client, gson);
+                break;
+            }
+            case Constants.API_SELECTION_BARCODESPIDER: {
+                retrofit = getAdapter(Constants.BASE_URL_BARCODESPIDER, client, gson);
                 break;
             }
         }
@@ -97,7 +102,13 @@ public class ApiHelper {
 
     public void itemLookupUPCDatabase(String barcode, OnDataCallback<BarcodeModel> onDataCallback) {
         UPCDatabaseApiService apiService = retrofit.create(UPCDatabaseApiService.class);
-        Call<BarcodeModel> call = apiService.itemLookup(barcode, Constants.UPC_DATABASE_API_KEY);
+        Call<BarcodeModel> call = apiService.itemLookup(barcode, Constants.UPCDATABASE_API_KEY);
+        processCall(call, onDataCallback);
+    }
+
+    public void itemLookupBarcodeSpider(String barcode, OnDataCallback<BarcodeModelBarcodeSpider> onDataCallback) {
+        BarcodeSpiderApiService apiService = retrofit.create(BarcodeSpiderApiService.class);
+        Call<BarcodeModelBarcodeSpider> call = apiService.itemLookup(Constants.BARCODESPIDER_API_KEY, barcode);
         processCall(call, onDataCallback);
     }
 }
