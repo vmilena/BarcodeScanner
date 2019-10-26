@@ -2,11 +2,12 @@ package com.example.barcodedemo.api.models;
 
 import com.example.barcodedemo.utils.Constants;
 import com.google.gson.annotations.SerializedName;
+import com.orm.SugarRecord;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class BarcodeModel {
+public class BarcodeModel extends SugarRecord<BarcodeModel> {
     @SerializedName("title")
     private String name;
     @SerializedName(value = "price", alternate = {"lowest_recorded_price", "msrp", "lowest_price"})
@@ -15,6 +16,9 @@ public class BarcodeModel {
     @SerializedName("images")
     private List<String> imageUrls;
     private String image;
+
+    public BarcodeModel() {
+    }
 
     public BarcodeModel(String name, float price, String description, List<String> imageUrls) {
         this.name = name;

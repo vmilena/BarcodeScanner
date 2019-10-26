@@ -16,4 +16,6 @@ public class Constants {
     public static final String UPCDATABASE_API_KEY = "E33A19C3D44DF48B5958AC976623D25C";
     public static final String BARCODESPIDER_API_KEY = "82171e2e8cec37c63979";
 
+    public static final String UNAVAILABLE = "Unavailable";
+
 }

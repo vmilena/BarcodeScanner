@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">BarcodeDemo</string>
     <string name="scan_it">Scan It</string>
+    <string name="name_of_the_product">Product name</string>
+    <string name="description_of_the_product">Product description</string>
+    <string name="price">Price</string>
+    <string name="save_product_to_my_basket">Save product to my basket</string>
 </resources>
