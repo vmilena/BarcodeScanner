@@ -16,23 +16,29 @@ public class BarcodeModel extends SugarRecord<BarcodeModel> {
     @SerializedName("images")
     private List<String> imageUrls;
     private String image;
+    @SerializedName(value = "upc", alternate = {"barcode"})
+    private String upc;
+
+    private User user;
 
     public BarcodeModel() {
     }
 
-    public BarcodeModel(String name, float price, String description, List<String> imageUrls) {
+    public BarcodeModel(String name, float price, String description, List<String> imageUrls, String upc) {
         this.name = name;
         this.price = price;
         this.description = description;
         this.imageUrls = imageUrls;
         this.image = imageUrls.get(Constants.INDEX_FIRST);
+        this.upc = upc;
     }
 
 
-    public BarcodeModel(String name, float price, String description, String image) {
+    public BarcodeModel(String name, float price, String description, String image, String upc) {
         this.name = name;
         this.price = price;
         this.description = description;
+        this.upc = upc;
         this.imageUrls = new LinkedList<String>();
         this.imageUrls.add(image);
         this.image = image;
@@ -76,5 +82,21 @@ public class BarcodeModel extends SugarRecord<BarcodeModel> {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public String getUpc() {
+        return upc;
+    }
+
+    public void setUpc(String upc) {
+        this.upc = upc;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

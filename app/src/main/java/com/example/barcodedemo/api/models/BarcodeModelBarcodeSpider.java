@@ -1,5 +1,7 @@
 package com.example.barcodedemo.api.models;
 
+import com.example.barcodedemo.utils.Constants;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -15,10 +17,10 @@ public class BarcodeModelBarcodeSpider {
     public BarcodeModel getBarcodeModel() {
         return new BarcodeModel(
                 this.item_attributes.get("title"),
-                Float.parseFloat(this.Stores.get(0).get("price")),
+                Float.parseFloat(this.Stores.get(Constants.INDEX_FIRST).get("price")),
                 this.item_attributes.get("description"),
-                this.item_attributes.get("image")
-        );
+                this.item_attributes.get("image"),
+                this.item_attributes.get("upc"));
     }
 
     public HashMap<String, String> getItem_attributes() {
