@@ -17,9 +17,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.barcodedemo.adapters.ProductsAdapter;
 import com.example.barcodedemo.adapters.TextResultsAdapter;
+import com.example.barcodedemo.api.models.BarcodeModel;
+import com.example.barcodedemo.orm.BarcodeScannerDatabase;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,6 +36,8 @@ public class SayItActivity extends AppCompatActivity implements OnItemClickListe
     TextView resultTextView;
     @BindView(R.id.textResultsRecyclerView)
     RecyclerView textResultsRecyclerView;
+    @BindView(R.id.searchResultsRecyclerView)
+    RecyclerView searchResultsRecyclerView;
 
     SpeechRecognizer speechRecognizer;
     private static final String TAG = SayItActivity.class.getSimpleName();
@@ -104,8 +110,9 @@ public class SayItActivity extends AppCompatActivity implements OnItemClickListe
             updateText("Which of these terms do you want to search for?");
             TextResultsAdapter adapter = new TextResultsAdapter(this, data, this);
             textResultsRecyclerView.setAdapter(adapter);
+        } else {
+            updateText("Did not recognize what you said. Can you please repeat?");
         }
-        updateText("Did not recognize what you said. Can you please repeat?");
     }
 
     private void updateText(String text) {
@@ -113,7 +120,20 @@ public class SayItActivity extends AppCompatActivity implements OnItemClickListe
     }
 
     private void performSearch(String searchQuery) {
+        String sqliteFriendlySearchQuery = "%" + searchQuery + "%";
+        List<BarcodeModel> barcodeModels = BarcodeScannerDatabase.getInstance(getApplicationContext())
+                .productDao()
+                .getProductsByName(sqliteFriendlySearchQuery);
+        if (barcodeModels.size() > 0) {
+            updateResults(barcodeModels);
+        } else {
+            Toast.makeText(this, "Didn't find any products that contain '" + searchQuery + "'.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
+    private void updateResults(List<BarcodeModel> barcodeModels) {
+        ProductsAdapter adapter = new ProductsAdapter(barcodeModels, this, item -> ScannerActivity.start(SayItActivity.this, item));
+        searchResultsRecyclerView.setAdapter(adapter);
     }
 
     @OnClick(R.id.startSpeakingButton)
@@ -136,14 +156,14 @@ public class SayItActivity extends AppCompatActivity implements OnItemClickListe
         return true;
     }
 
+
     @OnClick(R.id.stopSpeakingButton)
-    void stopSpeaking(){
+    void stopSpeaking() {
         speechRecognizer.stopListening();
     }
 
     @Override
     public void itemClicked(String item) {
-        Toast.makeText(this, "You tapped: " + item, Toast.LENGTH_SHORT).show();
         performSearch(item);
     }
 

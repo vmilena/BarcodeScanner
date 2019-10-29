@@ -20,4 +20,5 @@ public class Constants {
 
     public static final String USER = "USER";
     public static final String NAME_UNAVAILABLE = "Name is not available";
+    public static final String PRODUCT = "product";
 }

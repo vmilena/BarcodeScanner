@@ -18,6 +18,10 @@ public interface ProductDao {
     @Query("Select * from products where upc like :upc")
     List<BarcodeModel> getProductList(String upc);
 
+    @Query("Select * from products where name like :name")
+    List<BarcodeModel> getProductsByName(String name);
+    @Query("Select * from products")
+    List<BarcodeModel> getAllProducts();
     @Insert
     void insertProduct(BarcodeModel barcodeModel);
 

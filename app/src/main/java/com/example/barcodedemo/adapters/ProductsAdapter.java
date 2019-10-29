@@ -70,12 +70,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             productNameTextView.setText(product.getName() != null ? product.getName() : Constants.NAME_UNAVAILABLE);
             DecimalFormat df = new DecimalFormat("#.##");
             priceTextView.setText(product.getPrice() != 0 ? "$ " + df.format(product.getPrice()) : Constants.UNAVAILABLE);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view){
-                    itemClicked.itemClicked(product);
-                }
-            });
+            itemView.setOnClickListener(view -> itemClicked.itemClicked(product));
         }
     }
 }

@@ -11,11 +11,12 @@ import androidx.room.PrimaryKey;
 import com.example.barcodedemo.utils.Constants;
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
 @Entity(tableName = "products", foreignKeys = @ForeignKey(entity = User.class, parentColumns = "userID", childColumns = "userId"), indices = {@Index("userId")})
-public class BarcodeModel {
+public class BarcodeModel implements Serializable {
     @Ignore
     private Boolean success;
     @SerializedName("title")

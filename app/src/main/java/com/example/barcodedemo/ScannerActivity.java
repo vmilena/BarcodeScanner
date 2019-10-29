@@ -1,5 +1,6 @@
 package com.example.barcodedemo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -62,13 +63,28 @@ public class ScannerActivity extends AppCompatActivity {
     @BindView(R.id.saveProductButton)
     Button saveProductButton;
 
+    public static void start(Context context, BarcodeModel barcodeModel) {
+        Intent starter = new Intent(context, ScannerActivity.class);
+        starter.putExtra(Constants.PRODUCT, barcodeModel);
+        context.startActivity(starter);
+    }
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, ScannerActivity.class);
+        context.startActivity(starter);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
         ButterKnife.bind(this);
-        dispatchTakePictureIntent();
+        if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey(Constants.PRODUCT)){
+            BarcodeModel barcodeModel = (BarcodeModel) getIntent().getSerializableExtra(Constants.PRODUCT);
+            showProduct(barcodeModel);
+        } else {
+            dispatchTakePictureIntent();
+        }
     }
 
     private void dispatchTakePictureIntent() {
