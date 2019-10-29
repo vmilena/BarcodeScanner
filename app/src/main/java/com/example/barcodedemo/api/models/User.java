@@ -16,6 +16,9 @@ public class User extends SugarRecord<User> {
     public User(String username, String password) {
     }
 
+    public User() {
+    }
+
     public String getPassword() {
         return password;
     }
@@ -24,7 +27,7 @@ public class User extends SugarRecord<User> {
         this.password = password;
     }
 
-    public String getUsernme() {
+    public String getUsername() {
         return username;
     }
 

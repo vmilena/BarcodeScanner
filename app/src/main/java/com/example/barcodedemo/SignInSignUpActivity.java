@@ -33,15 +33,17 @@ public class SignInSignUpActivity extends AppCompatActivity {
     @OnClick(R.id.signInButton)
     public void signIn() {
         List<User> userList = User.find(User.class, "username = ?", usernameEditText.getText().toString());
-            if(!userList.isEmpty()){
+        if (!userList.isEmpty()) {
             UserManager.getInstance(this).saveUser(userList.get(Constants.INDEX_FIRST));
         }
+        MainActivity.start(this);
     }
+
     @OnClick(R.id.signUpButton)
     public void signUp() {
         User user = new User(usernameEditText.getText().toString(),
                 passwordEditText.getText().toString());
-        if(!User.find(User.class, "username = ?", user.getUsernme()).isEmpty()){
+        if (!User.find(User.class, "username = ?", user.getUsername()).isEmpty()) {
             signIn();
         } else {
             user.setUserID(UUID.randomUUID().toString());

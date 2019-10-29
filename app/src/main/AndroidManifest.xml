@@ -20,21 +20,23 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:icon">
+        tools:replace="android:icon"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity android:name=".SayItActivity"></activity>
 
         <activity
             android:name=".ScannerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity">
+        </activity>
+        <activity android:name=".SelectedProductsActivity"></activity>
+        <activity android:name=".SignInSignUpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SelectedProductsActivity"></activity>
-        <activity android:name=".SignInSignUpActivity" />
 
         <meta-data
             android:name="DATABASE"
@@ -45,6 +47,8 @@
         <meta-data
             android:name="QUERY_LOG"
             android:value="true" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="com.example.barcodedemo" />
+
         <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
