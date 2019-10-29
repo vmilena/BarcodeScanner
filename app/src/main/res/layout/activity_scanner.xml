@@ -153,6 +153,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
+            android:id="@+id/saveProductButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_element_margin"
@@ -167,10 +168,11 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/productConstraintLayout"
             app:layout_constraintVertical_bias="1" />
+
         <include
             android:id="@+id/loader"
             layout="@layout/loader_screen"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

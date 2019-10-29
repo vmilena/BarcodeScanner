@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,19 +16,20 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 
-import com.bumptech.glide.Glide;
 import com.example.barcodedemo.api.ApiHelper;
 import com.example.barcodedemo.api.OnDataCallback;
 import com.example.barcodedemo.api.models.BarcodeModel;
 import com.example.barcodedemo.api.models.BarcodeModelBarcodeSpider;
 import com.example.barcodedemo.api.models.BarcodeModelList;
 import com.example.barcodedemo.utils.Constants;
+import com.example.barcodedemo.utils.UserManager;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetectorOptions;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,10 +40,12 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ScannerActivity extends AppCompatActivity {
     static final int REQUEST_IMAGE_CAPTURE = 1;
     String currentPhotoPath;
+    BarcodeModel product;
     @BindView(R.id.productConstraintLayout)
     View productConstraintLayout;
     @BindView(R.id.loader)
@@ -54,6 +58,9 @@ public class ScannerActivity extends AppCompatActivity {
     TextView descriptionTextView;
     @BindView(R.id.productImageView)
     ImageView productImageView;
+    @BindView(R.id.saveProductButton)
+    Button saveProductButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +68,6 @@ public class ScannerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scanner);
         ButterKnife.bind(this);
         dispatchTakePictureIntent();
-
     }
 
     private void dispatchTakePictureIntent() {
@@ -137,61 +143,69 @@ public class ScannerActivity extends AppCompatActivity {
     }
 
     private void checkUPCItemDB(FirebaseVisionBarcode barcode) { //No. 1 Calls checkUPCDatabase() if API falls short
-        ApiHelper.getInstance(Constants.API_SELECTION_UPCITEMDB).itemLookupUPCItemDB(barcode.getRawValue(), new OnDataCallback<BarcodeModelList>() {
-            @Override
-            public void onSuccess(BarcodeModelList data) {
-                if (data != null) {
-                    data.getItems().get(Constants.INDEX_FIRST).setImage(data.getItems().get(Constants.INDEX_FIRST).getImageUrl());
-                    //TODO Maybe adjust models better
-                    showProduct(data.getItems().get(Constants.INDEX_FIRST));
-                } else {
-                    checkUPCDatabase(barcode);
-                }
-            }
+        ApiHelper.getInstance(Constants.API_SELECTION_UPCITEMDB)
+                .itemLookupUPCItemDB(barcode.getRawValue(), new OnDataCallback<BarcodeModelList>() {
+                    @Override
+                    public void onSuccess(BarcodeModelList data) {
+                        if (data != null) {
+                            data.getItems()
+                                    .get(Constants.INDEX_FIRST)
+                                    .setImage(data.getItems().get(Constants.INDEX_FIRST).getImageUrl());
+                            //TODO Maybe adjust models better
+                            product = data.getItems().get(Constants.INDEX_FIRST);
+                            showProduct(product);
+                        } else {
+                            checkUPCDatabase(barcode);
+                        }
+                    }
 
-            @Override
-            public void onFailure(String message) {
-                checkUPCDatabase(barcode);
-            }
-        });
+                    @Override
+                    public void onFailure(String message) {
+                        checkUPCDatabase(barcode);
+                    }
+                });
 
     }
 
     private void checkUPCDatabase(FirebaseVisionBarcode barcode) { //No. 2 Called by checkUPCItemDB(), and calls checkBarcodeSpider() if API falls short
-        ApiHelper.getInstance(Constants.API_SELECTION_UPCDATABASE).itemLookupUPCDatabase(barcode.getRawValue(), new OnDataCallback<BarcodeModel>() {
-            @Override
-            public void onSuccess(BarcodeModel data) {
-                if (data != null) {
-                    showProduct(data);
-                } else {
-                    checkBarcodeSpider(barcode);
-                }
-            }
+        ApiHelper.getInstance(Constants.API_SELECTION_UPCDATABASE)
+                .itemLookupUPCDatabase(barcode.getRawValue(), new OnDataCallback<BarcodeModel>() {
+                    @Override
+                    public void onSuccess(BarcodeModel data) {
+                        if (data != null) {
+                            product = data;
+                            showProduct(product);
+                        } else {
+                            checkBarcodeSpider(barcode);
+                        }
+                    }
 
-            @Override
-            public void onFailure(String message) {
-                checkBarcodeSpider(barcode);
-            }
-        });
+                    @Override
+                    public void onFailure(String message) {
+                        checkBarcodeSpider(barcode);
+                    }
+                });
     }
 
     private void checkBarcodeSpider(FirebaseVisionBarcode barcode) { //No.3 called by checkUPCDatabase()
-        ApiHelper.getInstance(Constants.API_SELECTION_BARCODESPIDER).itemLookupBarcodeSpider(barcode.getRawValue(), new OnDataCallback<BarcodeModelBarcodeSpider>() {
-            @Override
-            public void onSuccess(BarcodeModelBarcodeSpider data) {
-                if (data != null) {
-                    showProduct(data.getBarcodeModel());
-                } else {
-                    Toast.makeText(getApplicationContext(), "SCANNED BARCODE WAS NOT FOUND.", Toast.LENGTH_SHORT).show();
-                }
-            }
+        ApiHelper.getInstance(Constants.API_SELECTION_BARCODESPIDER)
+                .itemLookupBarcodeSpider(barcode.getRawValue(), new OnDataCallback<BarcodeModelBarcodeSpider>() {
+                    @Override
+                    public void onSuccess(BarcodeModelBarcodeSpider data) {
+                        if (data != null) {
+                            product = data.getBarcodeModel();
+                            showProduct(product);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "SCANNED BARCODE WAS NOT FOUND.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-            @Override
-            public void onFailure(String message) {
-                Toast.makeText(getApplicationContext(), "SCANNED BARCODE WAS NOT FOUND.", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        });
+                    @Override
+                    public void onFailure(String message) {
+                        Toast.makeText(getApplicationContext(), "SCANNED BARCODE WAS NOT FOUND.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                });
     }
 
     private void showProduct(BarcodeModel data) {
@@ -202,9 +216,10 @@ public class ScannerActivity extends AppCompatActivity {
         priceTextView.setText(data.getPrice() != 0 ? df.format(data.getPrice()) : Constants.UNAVAILABLE);
         descriptionTextView.setText(data.getDescription() != null ? data.getDescription() : Constants.UNAVAILABLE);
         if (data.getImage() != null) {
-            Glide.with(this).load(data.getImage()).into(productImageView);
+            Picasso.get().load(data.getImage()).into(productImageView);
         }
         loader.setVisibility(View.GONE);
+        saveProductButton.setVisibility(View.VISIBLE);
         productConstraintLayout.setVisibility(View.VISIBLE);
     }
 
@@ -212,5 +227,15 @@ public class ScannerActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+    @OnClick(R.id.saveProductButton)
+    public void saveProduct() {
+        if (BarcodeModel.find(BarcodeModel.class, "upc = ?", product.getUpc()).isEmpty()) {
+            product.setUser(UserManager.getInstance(this).getCurrentUser());
+            product.save();
+        } else {
+            Toast.makeText(this, "You already saved this product.", Toast.LENGTH_SHORT).show();
+        }
     }
 }

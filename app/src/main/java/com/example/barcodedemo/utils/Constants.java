@@ -7,9 +7,9 @@ public class Constants {
     public static final String BASE_URL_UPCDATABASE = "https://api.upcdatabase.org/";
     public static final String BASE_URL_BARCODESPIDER = "https://api.barcodespider.com/v1/";
 
-    public static final String API_SELECTION_UPCITEMDB = "upcitemdb";
-    public static final String API_SELECTION_BARCODESPIDER = "barcodespider";
-    public static final String API_SELECTION_UPCDATABASE = "upcdatabase";
+    public static final String API_SELECTION_UPCITEMDB = "UPCITEMDB";
+    public static final String API_SELECTION_BARCODESPIDER = "BARCODESPIDER";
+    public static final String API_SELECTION_UPCDATABASE = "UPCDATABAE";
     public static final int INDEX_FIRST = 0;
 
 
@@ -18,4 +18,5 @@ public class Constants {
 
     public static final String UNAVAILABLE = "Unavailable";
 
+    public static final String USER = "USER";
 }
