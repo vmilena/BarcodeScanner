@@ -5,6 +5,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:fillViewport="true"
+    android:paddingBottom="@dimen/standard_padding"
     tools:context=".ScannerActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -37,6 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_element_margin"
                 android:text="@string/name_of_the_product"
+                android:textAlignment="center"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -47,7 +49,10 @@
                 android:id="@+id/nameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="@dimen/standard_padding"
+                android:paddingEnd="@dimen/standard_padding"
                 android:text="Example Product Name"
+                android:textAlignment="center"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -71,6 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_element_margin"
                 android:text="@string/price"
+                android:textAlignment="center"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -78,17 +84,13 @@
                 app:layout_constraintTop_toBottomOf="@id/nameLineView" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/productPriceTextView" />
-
-            <TextView
                 android:id="@+id/priceTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="@dimen/standard_padding"
+                android:paddingEnd="@dimen/standard_padding"
                 android:text="20.00"
+                android:textAlignment="center"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="20dp"
                 android:textStyle="bold"
@@ -96,15 +98,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/productPriceTextView" />
 
-            <TextView
-                android:id="@+id/currencyTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingLeft="5dp"
-                android:text="USD"
-                android:textColor="@color/colorPrimaryDark"
-                app:layout_constraintBottom_toBottomOf="@+id/priceTextView"
-                app:layout_constraintStart_toEndOf="@id/priceTextView" />
 
             <View
                 android:id="@+id/priceLineView"
@@ -122,6 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_element_margin"
                 android:text="@string/description_of_the_product"
+                android:textAlignment="center"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -132,7 +126,10 @@
                 android:id="@+id/descriptionTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:paddingStart="@dimen/standard_padding"
+                android:paddingEnd="@dimen/standard_padding"
                 android:text="Example Product Description"
+                android:textAlignment="center"
                 android:textColor="@color/colorPrimaryDark"
                 android:textSize="20sp"
                 android:textStyle="bold"
@@ -157,17 +154,29 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_element_margin"
-            android:layout_marginBottom="@dimen/standard_margin"
+            android:layout_marginBottom="@dimen/default_element_margin"
             android:background="@color/colorPrimaryLight"
             android:padding="@dimen/default_element_padding"
             android:text="@string/save_product_to_my_basket"
             android:textColor="@color/colorPrimaryDark"
             android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/homeButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/productConstraintLayout"
             app:layout_constraintVertical_bias="1" />
+
+        <Button
+            android:id="@+id/homeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/standard_margin"
+            android:background="@color/colorPrimaryLight"
+            android:text="Home"
+            android:textColor="@color/colorPrimaryDark"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <include
             android:id="@+id/loader"

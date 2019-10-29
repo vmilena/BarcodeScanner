@@ -3,6 +3,7 @@ package com.example.barcodedemo.api.models;
 import java.util.List;
 
 public class BarcodeModelList {
+    private int total;
 
     private List<BarcodeModel> items;
 
@@ -16,5 +17,9 @@ public class BarcodeModelList {
 
     public void setItems(List<BarcodeModel> items) {
         this.items = items;
+    }
+
+    public int getTotal() {
+        return total;
     }
 }

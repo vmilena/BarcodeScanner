@@ -12,8 +12,8 @@ import java.util.List;
 
 @Dao
 public interface ProductDao {
-    @Query("Select * from products")
-    List<BarcodeModel> getProductList();
+    @Query("Select * from products where upc like :upc")
+    List<BarcodeModel> getProductList(String upc);
     @Insert
     void insertProduct(BarcodeModel barcodeModel);
     @Update

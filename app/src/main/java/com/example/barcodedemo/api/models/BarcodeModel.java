@@ -16,6 +16,8 @@ import java.util.List;
 
 @Entity(tableName = "products", foreignKeys = @ForeignKey(entity = User.class, parentColumns = "userID", childColumns = "userId"), indices = {@Index("userId")})
 public class BarcodeModel {
+    @Ignore
+    private Boolean success;
     @SerializedName("title")
     @ColumnInfo
     private String name;
@@ -32,7 +34,7 @@ public class BarcodeModel {
     @SerializedName(value = "upc", alternate = {"barcode"})
     @PrimaryKey
     @NonNull
-    private String upc;
+    private String upc = "";
     @ColumnInfo
     private String userId;
 
@@ -128,5 +130,9 @@ public class BarcodeModel {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Boolean getSuccess() {
+        return success;
     }
 }

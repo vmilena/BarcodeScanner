@@ -109,6 +109,24 @@ public class ApiHelper {
     public void itemLookupBarcodeSpider(String barcode, OnDataCallback<BarcodeModelBarcodeSpider> onDataCallback) {
         BarcodeSpiderApiService apiService = retrofit.create(BarcodeSpiderApiService.class);
         Call<BarcodeModelBarcodeSpider> call = apiService.itemLookup(Constants.BARCODESPIDER_API_KEY, barcode);
-        processCall(call, onDataCallback);
+        call.enqueue(new Callback<BarcodeModelBarcodeSpider>() {
+            @Override
+            public void onResponse(Call<BarcodeModelBarcodeSpider> call, Response<BarcodeModelBarcodeSpider> response) {
+                if (response.isSuccessful()) {
+                    onDataCallback.onSuccess(response.body());
+                } else {
+                    try {
+                        onDataCallback.onFailure("Failure");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BarcodeModelBarcodeSpider> call, Throwable t) {
+                onDataCallback.onFailure(t.getLocalizedMessage());
+            }
+        });
     }
 }

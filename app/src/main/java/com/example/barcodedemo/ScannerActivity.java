@@ -21,6 +21,8 @@ import com.example.barcodedemo.api.OnDataCallback;
 import com.example.barcodedemo.api.models.BarcodeModel;
 import com.example.barcodedemo.api.models.BarcodeModelBarcodeSpider;
 import com.example.barcodedemo.api.models.BarcodeModelList;
+import com.example.barcodedemo.orm.BarcodeScannerDatabase;
+import com.example.barcodedemo.orm.ProductDao;
 import com.example.barcodedemo.utils.Constants;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
@@ -123,7 +125,7 @@ public class ScannerActivity extends AppCompatActivity {
 
             FirebaseVisionBarcodeDetector detector =
                     FirebaseVision.getInstance().getVisionBarcodeDetector(options);
-            //TODO Specify type of barcode
+
             Task<List<FirebaseVisionBarcode>> task = detector.detectInImage(image);
             task.addOnSuccessListener(firebaseVisionBarcodes -> {
                 for (FirebaseVisionBarcode barcode :
@@ -131,6 +133,7 @@ public class ScannerActivity extends AppCompatActivity {
                     lookupInDatabases(barcode);
                 }
             }).addOnFailureListener(e -> {
+                loader.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(), "BARCODE DETECTION FAILED", Toast.LENGTH_SHORT).show();
                 finish();
             });
@@ -146,12 +149,13 @@ public class ScannerActivity extends AppCompatActivity {
                 .itemLookupUPCItemDB(barcode.getRawValue(), new OnDataCallback<BarcodeModelList>() {
                     @Override
                     public void onSuccess(BarcodeModelList data) {
-                        if (data != null) {
-                            data.getItems()
-                                    .get(Constants.INDEX_FIRST)
-                                    .setImage(data.getItems().get(Constants.INDEX_FIRST).getImageUrl());
-                            //TODO Maybe adjust models better
+                        if (data.getTotal() != 0) {
                             product = data.getItems().get(Constants.INDEX_FIRST);
+                            if (product.getImageUrls().size() != 0) {
+                                product.setImage(product.getImageUrl());
+                            }
+                            product.setUpc(barcode.getRawValue());
+                            //TODO Maybe adjust models better
                             showProduct(product);
                         } else {
                             checkUPCDatabase(barcode);
@@ -171,8 +175,9 @@ public class ScannerActivity extends AppCompatActivity {
                 .itemLookupUPCDatabase(barcode.getRawValue(), new OnDataCallback<BarcodeModel>() {
                     @Override
                     public void onSuccess(BarcodeModel data) {
-                        if (data != null) {
+                        if (data.getSuccess()) {
                             product = data;
+                            product.setUpc(barcode.getRawValue());
                             showProduct(product);
                         } else {
                             checkBarcodeSpider(barcode);
@@ -191,10 +196,12 @@ public class ScannerActivity extends AppCompatActivity {
                 .itemLookupBarcodeSpider(barcode.getRawValue(), new OnDataCallback<BarcodeModelBarcodeSpider>() {
                     @Override
                     public void onSuccess(BarcodeModelBarcodeSpider data) {
-                        if (data != null) {
+                        if (data.hasResults()) {
                             product = data.getBarcodeModel();
+                            product.setUpc(barcode.getRawValue());
                             showProduct(product);
                         } else {
+                            loader.setVisibility(View.GONE);
                             Toast.makeText(getApplicationContext(), "SCANNED BARCODE WAS NOT FOUND.", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -202,6 +209,7 @@ public class ScannerActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(String message) {
                         Toast.makeText(getApplicationContext(), "SCANNED BARCODE WAS NOT FOUND.", Toast.LENGTH_SHORT).show();
+                        loader.setVisibility(View.GONE);
                         finish();
                     }
                 });
@@ -212,7 +220,7 @@ public class ScannerActivity extends AppCompatActivity {
         nameTextView.setText(data.getName() != null ? data.getName() : Constants.UNAVAILABLE);
 
         DecimalFormat df = new DecimalFormat("#.##");
-        priceTextView.setText(data.getPrice() != 0 ? df.format(data.getPrice()) : Constants.UNAVAILABLE);
+        priceTextView.setText(data.getPrice() != 0 ? "$ " + df.format(data.getPrice()) : Constants.UNAVAILABLE);
         descriptionTextView.setText(data.getDescription() != null ? data.getDescription() : Constants.UNAVAILABLE);
         if (data.getImage() != null) {
             Picasso.get().load(data.getImage()).into(productImageView);
@@ -230,10 +238,21 @@ public class ScannerActivity extends AppCompatActivity {
 
     @OnClick(R.id.saveProductButton)
     public void saveProduct() {
-        if (true) {
-
+        ProductDao productDao = BarcodeScannerDatabase.getInstance(this.getApplicationContext()).productDao();
+        if (productDao.getProductList(product.getUpc()).isEmpty()) {
+            productDao.insertProduct(product);
+            if (!productDao.getProductList(product.getUpc()).isEmpty()) {
+                Toast.makeText(this, "Product saved", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Product not saved", Toast.LENGTH_SHORT).show();
+            }
         } else {
             Toast.makeText(this, "You already saved this product.", Toast.LENGTH_SHORT).show();
         }
+    }
+    @OnClick(R.id.homeButton)
+    public void goToHomeScreen(){
+        MainActivity.start(this);
+        finish();
     }
 }
