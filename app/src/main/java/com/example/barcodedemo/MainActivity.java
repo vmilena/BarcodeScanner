@@ -22,6 +22,13 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.scanItButton) void scanIt(){
         openScannerActivity();
     }
+    @OnClick(R.id.sayItButton) void sayIt(){
+        openSayItActivity();
+    }
+
+    private void openSayItActivity() {
+        SayItActivity.start(this);
+    }
 
     private void openScannerActivity() {
         Intent intent = new Intent(MainActivity.this, ScannerActivity.class);
