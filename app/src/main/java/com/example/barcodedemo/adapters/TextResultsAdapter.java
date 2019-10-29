@@ -9,7 +9,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.barcodedemo.ItemClickedInterface;
+import com.example.barcodedemo.OnItemClickListener;
 
 import java.util.ArrayList;
 
@@ -20,12 +20,12 @@ public class TextResultsAdapter extends RecyclerView.Adapter<TextResultsAdapter.
 
     private Context context;
     private ArrayList<String> items;
-    ItemClickedInterface itemClickedInterface;
+    OnItemClickListener onItemClickListener;
 
-    public TextResultsAdapter(Context context, ArrayList<String> items, ItemClickedInterface itemClickedInterface) {
+    public TextResultsAdapter(Context context, ArrayList<String> items, OnItemClickListener onItemClickListener) {
         this.context = context;
         this.items = items;
-        this.itemClickedInterface = itemClickedInterface;
+        this.onItemClickListener = onItemClickListener;
     }
 
     @NonNull
@@ -56,7 +56,7 @@ public class TextResultsAdapter extends RecyclerView.Adapter<TextResultsAdapter.
 
         public void bind(String item) {
             textView.setText(item);
-            textView.setOnClickListener(view -> itemClickedInterface.itemClicked(item));
+            textView.setOnClickListener(view -> onItemClickListener.itemClicked(item));
         }
     }
 }

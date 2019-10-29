@@ -12,12 +12,18 @@ import java.util.List;
 
 @Dao
 public interface ProductDao {
+    @Query("Select * from products where userId like :userId")
+    List<BarcodeModel> getAllProducts(int userId);
+
     @Query("Select * from products where upc like :upc")
     List<BarcodeModel> getProductList(String upc);
+
     @Insert
     void insertProduct(BarcodeModel barcodeModel);
+
     @Update
     void updateProduct(BarcodeModel barcodeModel);
+
     @Delete
     void deleteProduct(BarcodeModel barcodeModel);
 }

@@ -1,13 +1,11 @@
 package com.example.barcodedemo;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 
-import butterknife.BindView;
+import androidx.appcompat.app.AppCompatActivity;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -25,11 +23,23 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
     }
 
-    @OnClick(R.id.scanItButton) void scanIt(){
+    @OnClick(R.id.scanItButton)
+    void scanIt() {
         openScannerActivity();
     }
-    @OnClick(R.id.sayItButton) void sayIt(){
+
+    @OnClick(R.id.sayItButton)
+    void sayIt() {
         openSayItActivity();
+    }
+
+    @OnClick(R.id.savedProductsButton)
+    void savedProducts() {
+        openSavedProducts();
+    }
+
+    private void openSavedProducts() {
+        SavedProductsActivity.start(this);
     }
 
     private void openSayItActivity() {
@@ -37,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openScannerActivity() {
-        Intent intent = new Intent(MainActivity.this, ScannerActivity.class);
-        MainActivity.this.startActivity(intent);
+        MainActivity.start(this);
     }
 }

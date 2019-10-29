@@ -5,4 +5,6 @@
     <string name="description_of_the_product">Product description</string>
     <string name="price">Price</string>
     <string name="save_product_to_my_basket">Save product to my basket</string>
+    <string name="saved_products">Saved products</string>
+    <string name="say_it">Say it</string>
 </resources>

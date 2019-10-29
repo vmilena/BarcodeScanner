@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SayItActivity extends AppCompatActivity implements ItemClickedInterface {
+public class SayItActivity extends AppCompatActivity implements OnItemClickListener<String> {
 
     private static final int MY_PERMISSIONS_RECORD_AUDIO = 99;
     @BindView(R.id.resultTextView)
@@ -145,5 +145,11 @@ public class SayItActivity extends AppCompatActivity implements ItemClickedInter
     public void itemClicked(String item) {
         Toast.makeText(this, "You tapped: " + item, Toast.LENGTH_SHORT).show();
         performSearch(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }

@@ -36,9 +36,9 @@ public class BarcodeModel {
     @NonNull
     private String upc = "";
     @ColumnInfo
-    private String userId;
+    private int userId;
 
-    public BarcodeModel(String name, float price, String description, String image, String upc, String userId) {
+    public BarcodeModel(String name, float price, String description, String image, String upc, int userId) {
         this.name = name;
         this.price = price;
         this.description = description;
@@ -124,11 +124,11 @@ public class BarcodeModel {
         this.imageUrls = imageUrls;
     }
 
-    public String getUserId() {
+    public int getUserId() {
         return userId;
     }
 
-    public void setUserId(String userId) {
+    public void setUserId(int userId) {
         this.userId = userId;
     }
 
