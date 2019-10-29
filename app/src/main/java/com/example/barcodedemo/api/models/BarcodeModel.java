@@ -1,29 +1,55 @@
 package com.example.barcodedemo.api.models;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.ForeignKey;
+import androidx.room.Ignore;
+import androidx.room.Index;
+import androidx.room.PrimaryKey;
+
 import com.example.barcodedemo.utils.Constants;
 import com.google.gson.annotations.SerializedName;
-import com.orm.SugarRecord;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class BarcodeModel extends SugarRecord<BarcodeModel> {
+@Entity(tableName = "products", foreignKeys = @ForeignKey(entity = User.class, parentColumns = "userID", childColumns = "userId"), indices = {@Index("userId")})
+public class BarcodeModel {
     @SerializedName("title")
+    @ColumnInfo
     private String name;
     @SerializedName(value = "price", alternate = {"lowest_recorded_price", "msrp", "lowest_price"})
+    @ColumnInfo
     private float price;
+    @ColumnInfo
     private String description;
     @SerializedName("images")
+    @Ignore
     private List<String> imageUrls;
+    @ColumnInfo
     private String image;
     @SerializedName(value = "upc", alternate = {"barcode"})
+    @PrimaryKey
+    @NonNull
     private String upc;
+    @ColumnInfo
+    private String userId;
 
-    private User user;
+    public BarcodeModel(String name, float price, String description, String image, String upc, String userId) {
+        this.name = name;
+        this.price = price;
+        this.description = description;
+        this.image = image;
+        this.upc = upc;
+        this.userId = userId;
+    }
 
+    @Ignore
     public BarcodeModel() {
     }
 
+    @Ignore
     public BarcodeModel(String name, float price, String description, List<String> imageUrls, String upc) {
         this.name = name;
         this.price = price;
@@ -33,7 +59,7 @@ public class BarcodeModel extends SugarRecord<BarcodeModel> {
         this.upc = upc;
     }
 
-
+    @Ignore
     public BarcodeModel(String name, float price, String description, String image, String upc) {
         this.name = name;
         this.price = price;
@@ -43,6 +69,7 @@ public class BarcodeModel extends SugarRecord<BarcodeModel> {
         this.imageUrls.add(image);
         this.image = image;
     }
+
 
     public String getName() {
         return name;
@@ -71,11 +98,6 @@ public class BarcodeModel extends SugarRecord<BarcodeModel> {
     public String getImageUrl() {
         return imageUrls.get(Constants.INDEX_FIRST); //get only the first image url on the list because we only need one
     }
-
-    public void setImageUrls(String imageUrl) {
-        this.imageUrls = imageUrls;
-    }
-
     public String getImage() {
         return image;
     }
@@ -92,11 +114,19 @@ public class BarcodeModel extends SugarRecord<BarcodeModel> {
         this.upc = upc;
     }
 
-    public User getUser() {
-        return user;
+    public List<String> getImageUrls() {
+        return imageUrls;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 }

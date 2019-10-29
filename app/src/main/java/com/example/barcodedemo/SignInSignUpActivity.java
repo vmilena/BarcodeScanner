@@ -2,15 +2,16 @@ package com.example.barcodedemo;
 
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.barcodedemo.api.models.User;
+import com.example.barcodedemo.orm.BarcodeScannerDatabase;
 import com.example.barcodedemo.utils.Constants;
 import com.example.barcodedemo.utils.UserManager;
 
 import java.util.List;
-import java.util.UUID;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,6 +24,7 @@ public class SignInSignUpActivity extends AppCompatActivity {
     @BindView(R.id.passwordEditText)
     EditText passwordEditText;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,24 +34,38 @@ public class SignInSignUpActivity extends AppCompatActivity {
 
     @OnClick(R.id.signInButton)
     public void signIn() {
-        List<User> userList = User.find(User.class, "username = ?", usernameEditText.getText().toString());
+        List<User> userList = BarcodeScannerDatabase
+                .getInstance(this.getApplicationContext())
+                .userDao()
+                .getUserList(usernameEditText.getText().toString());
+
         if (!userList.isEmpty()) {
-            UserManager.getInstance(this).saveUser(userList.get(Constants.INDEX_FIRST));
+            if (userList.get(Constants.INDEX_FIRST).getPassword().equals(passwordEditText.getText().toString())) {
+                UserManager.getInstance(this).saveUser(userList.get(Constants.INDEX_FIRST));
+                MainActivity.start(this);
+            } else {
+                Toast.makeText(this, "Password you entered is wrong", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(this, "Username you entered does not exist.", Toast.LENGTH_SHORT).show();
         }
-        MainActivity.start(this);
     }
 
     @OnClick(R.id.signUpButton)
     public void signUp() {
-        User user = new User(usernameEditText.getText().toString(),
-                passwordEditText.getText().toString());
-        if (!User.find(User.class, "username = ?", user.getUsername()).isEmpty()) {
-            signIn();
+        if (!BarcodeScannerDatabase.getInstance(this.getApplicationContext()).userDao().getUserList(usernameEditText.getText().toString()).isEmpty()) {
+            Toast.makeText(this, "User with this username already exists.", Toast.LENGTH_SHORT).show();
         } else {
-            user.setUserID(UUID.randomUUID().toString());
-            user.save();
+            User user = new User(usernameEditText.getText().toString(),
+                    passwordEditText.getText().toString());
+            BarcodeScannerDatabase
+                    .getInstance(this.getApplicationContext())
+                    .userDao()
+                    .insertUser(user);
             UserManager.getInstance(this).saveUser(user);
+            MainActivity.start(this);
         }
+
     }
 
 }

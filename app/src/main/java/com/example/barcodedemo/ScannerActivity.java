@@ -22,7 +22,6 @@ import com.example.barcodedemo.api.models.BarcodeModel;
 import com.example.barcodedemo.api.models.BarcodeModelBarcodeSpider;
 import com.example.barcodedemo.api.models.BarcodeModelList;
 import com.example.barcodedemo.utils.Constants;
-import com.example.barcodedemo.utils.UserManager;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
@@ -231,9 +230,8 @@ public class ScannerActivity extends AppCompatActivity {
 
     @OnClick(R.id.saveProductButton)
     public void saveProduct() {
-        if (BarcodeModel.find(BarcodeModel.class, "upc = ?", product.getUpc()).isEmpty()) {
-            product.setUser(UserManager.getInstance(this).getCurrentUser());
-            product.save();
+        if (true) {
+
         } else {
             Toast.makeText(this, "You already saved this product.", Toast.LENGTH_SHORT).show();
         }

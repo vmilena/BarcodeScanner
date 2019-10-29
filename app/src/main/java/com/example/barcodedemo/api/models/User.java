@@ -1,21 +1,30 @@
 package com.example.barcodedemo.api.models;
 
-import com.orm.SugarRecord;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-public class User extends SugarRecord<User> {
+@Entity(tableName = "user")
+public class User {
+    @ColumnInfo
     private String username;
+    @ColumnInfo
     private String password;
-    private String userID;
+    @PrimaryKey(autoGenerate = true)
+    private int userID;
 
-    public User(String usernme, String password, String userID) {
-        this.username = usernme;
+    public User(String username, String password, int userID) {
+        this.username = username;
         this.password = password;
         this.userID = userID;
     }
-
+    @Ignore
     public User(String username, String password) {
+        this.username = username;
+        this.password = password;
     }
-
+    @Ignore
     public User() {
     }
 
@@ -35,11 +44,11 @@ public class User extends SugarRecord<User> {
         this.username = usernme;
     }
 
-    public String getUserID() {
+    public int getUserID() {
         return userID;
     }
 
-    public void setUserID(String userID) {
+    public void setUserID(int userID) {
         this.userID = userID;
     }
 }
