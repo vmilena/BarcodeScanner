@@ -84,8 +84,8 @@ public class ScannerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_scanner);
         ButterKnife.bind(this);
         if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey(Constants.PRODUCT)) {
-            BarcodeModel barcodeModel = (BarcodeModel) getIntent().getSerializableExtra(Constants.PRODUCT);
-            showProduct(barcodeModel);
+            product = (BarcodeModel) getIntent().getSerializableExtra(Constants.PRODUCT);
+            showProduct(product);
         } else {
             dispatchTakePictureIntent();
         }
