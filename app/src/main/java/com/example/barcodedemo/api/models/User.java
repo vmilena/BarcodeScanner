@@ -12,18 +12,20 @@ public class User {
     @ColumnInfo
     private String password;
     @PrimaryKey(autoGenerate = true)
-    private int userID;
+    private Integer userId;
 
-    public User(String username, String password, int userID) {
+    public User(String username, String password, Integer userId) {
         this.username = username;
         this.password = password;
-        this.userID = userID;
+        this.userId = userId;
     }
+
     @Ignore
     public User(String username, String password) {
         this.username = username;
         this.password = password;
     }
+
     @Ignore
     public User() {
     }
@@ -40,15 +42,15 @@ public class User {
         return username;
     }
 
-    public void setUsernme(String usernme) {
-        this.username = usernme;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public int getUserID() {
-        return userID;
+    public Integer getUserId() {
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(Integer userID) {
+        this.userId = userID;
     }
 }

@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 import com.example.barcodedemo.api.models.BarcodeModel;
 import com.example.barcodedemo.api.models.User;
 
-@Database(entities = {User.class, BarcodeModel.class}, exportSchema = false, version = 1)
+@Database(entities = {User.class, BarcodeModel.class, UsersProductsJoin.class}, exportSchema = false, version = 2)
 public abstract class BarcodeScannerDatabase extends RoomDatabase {
     private static final String DB_NAME = "barcode_scanner_database";
     private static BarcodeScannerDatabase instance;
@@ -28,4 +28,6 @@ public abstract class BarcodeScannerDatabase extends RoomDatabase {
     public abstract UserDao userDao();
 
     public abstract ProductDao productDao();
+
+    public abstract UsersProductsDao usersProductsDao();
 }

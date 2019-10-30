@@ -3,9 +3,7 @@ package com.example.barcodedemo.api.models;
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.ForeignKey;
 import androidx.room.Ignore;
-import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import com.example.barcodedemo.utils.Constants;
@@ -15,7 +13,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-@Entity(tableName = "products", foreignKeys = @ForeignKey(entity = User.class, parentColumns = "userID", childColumns = "userId"), indices = {@Index("userId")})
+@Entity(tableName = "products")
 public class BarcodeModel implements Serializable {
     @Ignore
     private Boolean success;
@@ -36,19 +34,7 @@ public class BarcodeModel implements Serializable {
     @PrimaryKey
     @NonNull
     private String upc = "";
-    @ColumnInfo
-    private int userId;
 
-    public BarcodeModel(String name, float price, String description, String image, String upc, int userId) {
-        this.name = name;
-        this.price = price;
-        this.description = description;
-        this.image = image;
-        this.upc = upc;
-        this.userId = userId;
-    }
-
-    @Ignore
     public BarcodeModel() {
     }
 
@@ -68,7 +54,7 @@ public class BarcodeModel implements Serializable {
         this.price = price;
         this.description = description;
         this.upc = upc;
-        this.imageUrls = new LinkedList<String>();
+        this.imageUrls = new LinkedList<>();
         this.imageUrls.add(image);
         this.image = image;
     }
@@ -101,6 +87,7 @@ public class BarcodeModel implements Serializable {
     public String getImageUrl() {
         return imageUrls.get(Constants.INDEX_FIRST); //get only the first image url on the list because we only need one
     }
+
     public String getImage() {
         return image;
     }
@@ -125,15 +112,8 @@ public class BarcodeModel implements Serializable {
         this.imageUrls = imageUrls;
     }
 
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
     public Boolean getSuccess() {
         return success;
     }
+
 }

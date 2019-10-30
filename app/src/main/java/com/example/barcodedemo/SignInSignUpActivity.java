@@ -58,10 +58,11 @@ public class SignInSignUpActivity extends AppCompatActivity {
         } else {
             User user = new User(usernameEditText.getText().toString(),
                     passwordEditText.getText().toString());
-            BarcodeScannerDatabase
+            user.setUserId((int) BarcodeScannerDatabase
                     .getInstance(this.getApplicationContext())
                     .userDao()
-                    .insertUser(user);
+                    .insertUser(user));
+
             UserManager.getInstance(this).saveUser(user);
             MainActivity.start(this);
         }

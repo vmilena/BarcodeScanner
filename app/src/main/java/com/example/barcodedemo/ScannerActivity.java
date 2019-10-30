@@ -22,9 +22,13 @@ import com.example.barcodedemo.api.OnDataCallback;
 import com.example.barcodedemo.api.models.BarcodeModel;
 import com.example.barcodedemo.api.models.BarcodeModelBarcodeSpider;
 import com.example.barcodedemo.api.models.BarcodeModelList;
+import com.example.barcodedemo.api.models.User;
 import com.example.barcodedemo.orm.BarcodeScannerDatabase;
 import com.example.barcodedemo.orm.ProductDao;
+import com.example.barcodedemo.orm.UsersProductsDao;
+import com.example.barcodedemo.orm.UsersProductsJoin;
 import com.example.barcodedemo.utils.Constants;
+import com.example.barcodedemo.utils.UserManager;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
@@ -79,7 +83,7 @@ public class ScannerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
         ButterKnife.bind(this);
-        if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey(Constants.PRODUCT)){
+        if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey(Constants.PRODUCT)) {
             BarcodeModel barcodeModel = (BarcodeModel) getIntent().getSerializableExtra(Constants.PRODUCT);
             showProduct(barcodeModel);
         } else {
@@ -241,9 +245,18 @@ public class ScannerActivity extends AppCompatActivity {
         if (data.getImage() != null) {
             Picasso.get().load(data.getImage()).into(productImageView);
         }
+        saveProductToHistory();
         loader.setVisibility(View.GONE);
         saveProductButton.setVisibility(View.VISIBLE);
         productConstraintLayout.setVisibility(View.VISIBLE);
+    }
+
+    private void saveProductToHistory() {
+        ProductDao productDao = BarcodeScannerDatabase.getInstance(this.getApplicationContext()).productDao();
+        if (productDao.getProductListByUPC(product.getUpc()).isEmpty()) {
+            productDao.insertProduct(product);
+        }
+
     }
 
     @Override
@@ -254,20 +267,20 @@ public class ScannerActivity extends AppCompatActivity {
 
     @OnClick(R.id.saveProductButton)
     public void saveProduct() {
-        ProductDao productDao = BarcodeScannerDatabase.getInstance(this.getApplicationContext()).productDao();
-        if (productDao.getProductList(product.getUpc()).isEmpty()) {
-            productDao.insertProduct(product);
-            if (!productDao.getProductList(product.getUpc()).isEmpty()) {
-                Toast.makeText(this, "Product saved", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Product not saved", Toast.LENGTH_SHORT).show();
-            }
+        User user = UserManager.getInstance(this).getCurrentUser();
+        UsersProductsDao usersProductsDao = BarcodeScannerDatabase.getInstance(this.getApplicationContext()).usersProductsDao();
+        if (usersProductsDao.lookupSavedProductForUser(user.getUserId(), product.getUpc()).isEmpty()) {
+            UsersProductsJoin usersProductsJoin = new UsersProductsJoin();
+            usersProductsJoin.upc = product.getUpc();
+            usersProductsJoin.userId = user.getUserId();
+            usersProductsDao.insertUserProduct(usersProductsJoin);
         } else {
             Toast.makeText(this, "You already saved this product.", Toast.LENGTH_SHORT).show();
         }
     }
+
     @OnClick(R.id.homeButton)
-    public void goToHomeScreen(){
+    public void goToHomeScreen() {
         MainActivity.start(this);
         finish();
     }
