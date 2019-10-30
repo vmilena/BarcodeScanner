@@ -11,38 +11,38 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.barcodedemo.adapters.ProductsAdapter;
 import com.example.barcodedemo.api.models.BarcodeModel;
 import com.example.barcodedemo.orm.BarcodeScannerDatabase;
-import com.example.barcodedemo.orm.UsersProductsDao;
+import com.example.barcodedemo.orm.ProductDao;
 import com.example.barcodedemo.utils.Constants;
-import com.example.barcodedemo.utils.UserManager;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SavedProductsActivity extends AppCompatActivity {
-    List<BarcodeModel> userProducts;
-    ProductsAdapter productsAdapter;
-    @BindView(R.id.savedProductsRecyclerView)
+public class BrowsingHistoryActivity extends AppCompatActivity {
+    //Displays all browsed products from all users
+    @BindView(R.id.productsRecyclerView)
     RecyclerView productsRecyclerView;
+    List<BarcodeModel> products;
+    ProductsAdapter productsAdapter;
 
     public static void start(Context context) {
-        Intent starter = new Intent(context, SavedProductsActivity.class);
+        Intent starter = new Intent(context, BrowsingHistoryActivity.class);
         context.startActivity(starter);
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_saved_products);
+        setContentView(R.layout.activity_browsing_history);
         ButterKnife.bind(this);
 
-        UsersProductsDao usersProductsDao = BarcodeScannerDatabase.getInstance(this.getApplicationContext()).usersProductsDao();
-        userProducts = usersProductsDao.getProductsForUser(UserManager.getInstance(this).getCurrentUser().getUserId());
+        ProductDao productDao = BarcodeScannerDatabase.getInstance(this.getApplicationContext()).productDao();
+        products = productDao.getAllProducts();
         productsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        productsAdapter = new ProductsAdapter(userProducts, this, item -> showClickedProduct(item));
+        productsAdapter = new ProductsAdapter(products, this, item -> showClickedProduct(item));
         productsRecyclerView.setAdapter(productsAdapter);
-
     }
 
     private void showClickedProduct(BarcodeModel item) {

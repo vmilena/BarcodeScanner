@@ -1,5 +1,7 @@
 package com.example.barcodedemo;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,6 +25,11 @@ public class SignInSignUpActivity extends AppCompatActivity {
     EditText usernameEditText;
     @BindView(R.id.passwordEditText)
     EditText passwordEditText;
+
+    public static void start(Context context) {
+        Intent starter = new Intent(context, SignInSignUpActivity.class);
+        context.startActivity(starter);
+    }
 
 
     @Override

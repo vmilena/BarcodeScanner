@@ -3,5 +3,5 @@
     <dimen name="default_element_margin">10dp</dimen>
     <dimen name="standard_margin">20dp</dimen>
     <dimen name="default_element_padding">10dp</dimen>
-    <dimen name="standard_padding">20dp</dimen>
+    <dimen name="standard_padding">10dp</dimen>
 </resources>

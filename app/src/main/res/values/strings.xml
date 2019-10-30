@@ -7,4 +7,6 @@
     <string name="save_product_to_my_basket">Save product to my basket</string>
     <string name="saved_products">Saved products</string>
     <string name="say_it">Say it</string>
+    <string name="browsing_history">Browsing History</string>
+    <string name="sign_out">Sign out</string>
 </resources>

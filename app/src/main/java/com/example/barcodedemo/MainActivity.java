@@ -6,6 +6,8 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.barcodedemo.utils.UserManager;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -36,6 +38,26 @@ public class MainActivity extends AppCompatActivity {
     @OnClick(R.id.savedProductsButton)
     void savedProducts() {
         openSavedProducts();
+    }
+
+    @OnClick(R.id.signOutButton)
+    void signOut() {
+        UserManager.getInstance(this).logout();
+        openSignInSignOutActivity();
+    }
+
+    @OnClick(R.id.browsingHistoryButton)
+    void browsingHistory(){
+        openBrowsingHistory();
+    }
+
+    private void openBrowsingHistory() {
+        BrowsingHistoryActivity.start(this);
+    }
+
+    private void openSignInSignOutActivity() {
+        SignInSignUpActivity.start(this);
+        finish();
     }
 
     private void openSavedProducts() {
