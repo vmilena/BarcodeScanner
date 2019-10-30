@@ -51,6 +51,11 @@ public class MainActivity extends AppCompatActivity {
         openBrowsingHistory();
     }
 
+    @OnClick(R.id.searchBarcodeButton)
+    void searchBarcode(){
+        SearchBarcodeActivity.start(this);
+    }
+
     private void openBrowsingHistory() {
         BrowsingHistoryActivity.start(this);
     }

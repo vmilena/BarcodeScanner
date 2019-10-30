@@ -7,8 +7,6 @@ import com.example.barcodedemo.utils.Constants;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import org.json.JSONObject;
-
 import java.lang.reflect.Modifier;
 import java.util.concurrent.TimeUnit;
 
@@ -78,8 +76,7 @@ public class ApiHelper {
                     onDataCallback.onSuccess(response.body());
                 } else {
                     try {
-                        JSONObject jObjError = new JSONObject(response.errorBody().string());
-                        onDataCallback.onFailure(jObjError.getString("error"));
+                        onDataCallback.onFailure(Constants.FAILURE);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -109,24 +106,6 @@ public class ApiHelper {
     public void itemLookupBarcodeSpider(String barcode, OnDataCallback<BarcodeModelBarcodeSpider> onDataCallback) {
         BarcodeSpiderApiService apiService = retrofit.create(BarcodeSpiderApiService.class);
         Call<BarcodeModelBarcodeSpider> call = apiService.itemLookup(Constants.BARCODESPIDER_API_KEY, barcode);
-        call.enqueue(new Callback<BarcodeModelBarcodeSpider>() {
-            @Override
-            public void onResponse(Call<BarcodeModelBarcodeSpider> call, Response<BarcodeModelBarcodeSpider> response) {
-                if (response.isSuccessful()) {
-                    onDataCallback.onSuccess(response.body());
-                } else {
-                    try {
-                        onDataCallback.onFailure("Failure");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BarcodeModelBarcodeSpider> call, Throwable t) {
-                onDataCallback.onFailure(t.getLocalizedMessage());
-            }
-        });
+        processCall(call, onDataCallback);
     }
 }

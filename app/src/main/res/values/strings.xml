@@ -9,4 +9,6 @@
     <string name="say_it">Say it</string>
     <string name="browsing_history">Browsing History</string>
     <string name="sign_out">Sign out</string>
+    <string name="search_barcode">Search barcode</string>
+    <string name="search_by_typing_a_barcode">Search by typing a barcode</string>
 </resources>

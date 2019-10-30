@@ -73,6 +73,12 @@ public class ScannerActivity extends AppCompatActivity {
         context.startActivity(starter);
     }
 
+    public static void start(Context context, String barcode) {
+        Intent starter = new Intent(context, ScannerActivity.class);
+        starter.putExtra(Constants.PRODUCT, barcode);
+        context.startActivity(starter);
+    }
+
     public static void start(Context context) {
         Intent starter = new Intent(context, ScannerActivity.class);
         context.startActivity(starter);
@@ -86,6 +92,8 @@ public class ScannerActivity extends AppCompatActivity {
         if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey(Constants.PRODUCT)) {
             product = (BarcodeModel) getIntent().getSerializableExtra(Constants.PRODUCT);
             showProduct(product);
+        } else if (getIntent() != null && getIntent().getExtras() != null && getIntent().getExtras().containsKey(Constants.BARCODE)) {
+            lookupInDatabases(getIntent().getStringExtra(Constants.BARCODE));
         } else {
             dispatchTakePictureIntent();
         }
@@ -150,7 +158,7 @@ public class ScannerActivity extends AppCompatActivity {
             task.addOnSuccessListener(firebaseVisionBarcodes -> {
                 for (FirebaseVisionBarcode barcode :
                         firebaseVisionBarcodes) {
-                    lookupInDatabases(barcode);
+                    lookupInDatabases(barcode.getRawValue());
                 }
             }).addOnFailureListener(e -> {
                 loader.setVisibility(View.GONE);
@@ -160,13 +168,14 @@ public class ScannerActivity extends AppCompatActivity {
         }
     }
 
-    private void lookupInDatabases(FirebaseVisionBarcode barcode) {
+    private void lookupInDatabases(String barcode) {
+        loader.setVisibility(View.VISIBLE);
         checkUPCItemDB(barcode); // This is the first of three methods we call to check APIs
     }
 
-    private void checkUPCItemDB(FirebaseVisionBarcode barcode) { //No. 1 Calls checkUPCDatabase() if API falls short
+    private void checkUPCItemDB(String barcode) { //No. 1 Calls checkUPCDatabase() if API falls short
         ApiHelper.getInstance(Constants.API_SELECTION_UPCITEMDB)
-                .itemLookupUPCItemDB(barcode.getRawValue(), new OnDataCallback<BarcodeModelList>() {
+                .itemLookupUPCItemDB(barcode, new OnDataCallback<BarcodeModelList>() {
                     @Override
                     public void onSuccess(BarcodeModelList data) {
                         if (data.getTotal() != 0) {
@@ -174,8 +183,7 @@ public class ScannerActivity extends AppCompatActivity {
                             if (product.getImageUrls().size() != 0) {
                                 product.setImage(product.getImageUrl());
                             }
-                            product.setUpc(barcode.getRawValue());
-                            //TODO Maybe adjust models better
+                            product.setUpc(barcode);
                             showProduct(product);
                         } else {
                             checkUPCDatabase(barcode);
@@ -190,14 +198,14 @@ public class ScannerActivity extends AppCompatActivity {
 
     }
 
-    private void checkUPCDatabase(FirebaseVisionBarcode barcode) { //No. 2 Called by checkUPCItemDB(), and calls checkBarcodeSpider() if API falls short
+    private void checkUPCDatabase(String barcode) { //No. 2 Called by checkUPCItemDB(), and calls checkBarcodeSpider() if API falls short
         ApiHelper.getInstance(Constants.API_SELECTION_UPCDATABASE)
-                .itemLookupUPCDatabase(barcode.getRawValue(), new OnDataCallback<BarcodeModel>() {
+                .itemLookupUPCDatabase(barcode, new OnDataCallback<BarcodeModel>() {
                     @Override
                     public void onSuccess(BarcodeModel data) {
                         if (data.getSuccess()) {
                             product = data;
-                            product.setUpc(barcode.getRawValue());
+                            product.setUpc(barcode);
                             showProduct(product);
                         } else {
                             checkBarcodeSpider(barcode);
@@ -211,14 +219,14 @@ public class ScannerActivity extends AppCompatActivity {
                 });
     }
 
-    private void checkBarcodeSpider(FirebaseVisionBarcode barcode) { //No.3 called by checkUPCDatabase()
+    private void checkBarcodeSpider(String barcode) { //No.3 called by checkUPCDatabase()
         ApiHelper.getInstance(Constants.API_SELECTION_BARCODESPIDER)
-                .itemLookupBarcodeSpider(barcode.getRawValue(), new OnDataCallback<BarcodeModelBarcodeSpider>() {
+                .itemLookupBarcodeSpider(barcode, new OnDataCallback<BarcodeModelBarcodeSpider>() {
                     @Override
                     public void onSuccess(BarcodeModelBarcodeSpider data) {
                         if (data.hasResults()) {
                             product = data.getBarcodeModel();
-                            product.setUpc(barcode.getRawValue());
+                            product.setUpc(barcode);
                             showProduct(product);
                         } else {
                             loader.setVisibility(View.GONE);

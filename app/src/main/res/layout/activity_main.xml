@@ -8,6 +8,18 @@
     tools:context=".MainActivity">
 
     <Button
+        android:id="@+id/searchBarcodeButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:text="@string/search_by_typing_a_barcode"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
         android:id="@+id/scanItButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -25,7 +37,7 @@
         android:id="@+id/sayItButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="@dimen/default_element_margin"
         android:background="@color/colorPrimary"
         android:padding="5dp"
         android:text="@string/say_it"
@@ -47,23 +59,25 @@
         <Button
             android:id="@+id/savedProductsButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginEnd="@dimen/default_element_margin"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
             android:padding="5dp"
             android:text="@string/saved_products"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
 
         <Button
             android:id="@+id/browsingHistoryButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/colorPrimary"
             android:padding="5dp"
             android:text="@string/browsing_history"
-            android:textColor="@android:color/white" />
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
     </LinearLayout>
 
     <Button
@@ -74,5 +88,6 @@
         android:padding="5dp"
         android:text="@string/sign_out"
         android:textColor="@android:color/white"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -23,7 +23,8 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning"
         tools:replace="android:icon">
-        <activity android:name=".BrowsingHistoryActivity"></activity>
+        <activity android:name=".SearchBarcodeActivity"></activity>
+        <activity android:name=".BrowsingHistoryActivity" />
         <activity android:name=".SavedProductsActivity" />
         <activity android:name=".SayItActivity" />
         <activity
