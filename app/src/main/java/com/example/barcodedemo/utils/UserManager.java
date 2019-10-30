@@ -6,7 +6,7 @@ import android.preference.PreferenceManager;
 
 import com.example.barcodedemo.api.models.User;
 import com.google.gson.Gson;
-
+//Managing users
 public class UserManager {
     private static UserManager instance;
     private SharedPreferences sharedPreferences;

@@ -22,6 +22,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+//This class gives instructions on how should a RecyclerView display products
+
 public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.ProductsViewHolder> {
     private List<BarcodeModel> productsList;
     private Context context;

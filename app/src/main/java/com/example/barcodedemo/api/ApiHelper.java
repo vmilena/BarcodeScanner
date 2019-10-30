@@ -18,12 +18,14 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+//This class helps with API communication
+
 public class ApiHelper {
-    Retrofit retrofit;
+    Retrofit retrofit; //Retrofit is a library to retrieve and upload the data via Rest based web service
 
     private ApiHelper(String apiSelection) {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY); //Logging the API response
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .addInterceptor(interceptor)
@@ -33,9 +35,11 @@ public class ApiHelper {
 
         GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC);
-        Gson gson = gsonBuilder.create();
+        Gson gson = gsonBuilder.create(); //For mapping fields of API response and models
+
         OkHttpClient client = builder.build();
-        switch (apiSelection) {
+
+        switch (apiSelection) { //Since we are using 3 different APIs, we need to select the one that's being called
             case Constants.API_SELECTION_UPCITEMDB: {
                 retrofit = getAdapter(Constants.BASE_URL_UPCITEMDB, client, gson);
                 break;
@@ -68,7 +72,7 @@ public class ApiHelper {
         return new ApiHelper(apiSelection);
     }
 
-    private <T> void processCall(Call<T> call, final OnDataCallback<T> onDataCallback) {
+    private <T> void processCall(Call<T> call, final OnDataCallback<T> onDataCallback) { //Method that sends generic request
         call.enqueue(new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {

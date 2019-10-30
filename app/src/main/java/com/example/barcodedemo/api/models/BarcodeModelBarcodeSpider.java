@@ -4,7 +4,7 @@ import com.example.barcodedemo.utils.Constants;
 
 import java.util.HashMap;
 import java.util.List;
-
+//BarcodeModel wrapper that handles Barcodespider API response
 public class BarcodeModelBarcodeSpider {
     private HashMap<String, String> item_attributes;
     private HashMap<String, String> item_response;

@@ -16,6 +16,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+//This class gives instructions on how should a RecyclerView display text
+
 public class TextResultsAdapter extends RecyclerView.Adapter<TextResultsAdapter.TextResultViewHolder> {
 
     private Context context;

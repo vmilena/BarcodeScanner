@@ -8,8 +8,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.barcodedemo.utils.Constants;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -35,9 +33,7 @@ public class SearchBarcodeActivity extends AppCompatActivity {
     void searchBarcode() {
         String barcode = searchEditText.getText().toString();
         if (!barcode.isEmpty()) {
-            Intent intent = new Intent(this, ScannerActivity.class);
-            intent.putExtra(Constants.BARCODE, barcode);
-            startActivity(intent);
+            ScannerActivity.start(SearchBarcodeActivity.this, barcode);
         } else {
             Toast.makeText(this, "You did not type in barcode to search.", Toast.LENGTH_SHORT).show();
         }

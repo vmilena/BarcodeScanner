@@ -12,7 +12,6 @@ import com.example.barcodedemo.adapters.ProductsAdapter;
 import com.example.barcodedemo.api.models.BarcodeModel;
 import com.example.barcodedemo.orm.BarcodeScannerDatabase;
 import com.example.barcodedemo.orm.UsersProductsDao;
-import com.example.barcodedemo.utils.Constants;
 import com.example.barcodedemo.utils.UserManager;
 
 import java.util.List;
@@ -46,9 +45,7 @@ public class SavedProductsActivity extends AppCompatActivity {
     }
 
     private void showClickedProduct(BarcodeModel item) {
-        Intent intent = new Intent(this, ScannerActivity.class);
-        intent.putExtra(Constants.PRODUCT, item);
-        startActivity(intent);
+        ScannerActivity.start(SavedProductsActivity.this, item);
         finish();
     }
 }

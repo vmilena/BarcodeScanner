@@ -7,7 +7,7 @@ import androidx.room.Index;
 
 import com.example.barcodedemo.api.models.BarcodeModel;
 import com.example.barcodedemo.api.models.User;
-
+//Joined table for users and products
 @Entity(tableName = "users_products_join",
         primaryKeys = {"userId", "upc"},
         foreignKeys = {

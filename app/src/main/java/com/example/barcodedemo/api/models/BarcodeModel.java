@@ -12,10 +12,10 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
-
-@Entity(tableName = "products")
+//Basic model of API response
+@Entity(tableName = "products") //Creates database table for products
 public class BarcodeModel implements Serializable {
-    @Ignore
+    @Ignore //Ignores fields that we don't want to save to our database table
     private Boolean success;
     @SerializedName("title")
     @ColumnInfo
@@ -33,7 +33,7 @@ public class BarcodeModel implements Serializable {
     @SerializedName(value = "upc", alternate = {"barcode"})
     @PrimaryKey
     @NonNull
-    private String upc = "";
+    private String upc = ""; //Since upc is the primary key, it needs to be nonnull, and since its nonnull we have to initialize it somehow
 
     public BarcodeModel() {
     }
