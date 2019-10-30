@@ -29,7 +29,6 @@
             android:name=".ScannerActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".SelectedProductsActivity" />
         <activity android:name=".SignInSignUpActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

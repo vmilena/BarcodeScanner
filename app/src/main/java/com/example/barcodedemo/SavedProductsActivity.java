@@ -5,14 +5,24 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.barcodedemo.adapters.ProductsAdapter;
+import com.example.barcodedemo.api.models.BarcodeModel;
+import com.example.barcodedemo.orm.BarcodeScannerDatabase;
+import com.example.barcodedemo.orm.UsersProductsDao;
+import com.example.barcodedemo.utils.UserManager;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SavedProductsActivity extends AppCompatActivity {
-
-    @BindView(R.id.productsRecyclerView)
+    List<BarcodeModel> userProducts;
+    ProductsAdapter productsAdapter;
+    @BindView(R.id.savedProductsRecyclerView)
     RecyclerView productsRecyclerView;
 
     public static void start(Context context) {
@@ -25,5 +35,22 @@ public class SavedProductsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saved_products);
         ButterKnife.bind(this);
+
+        UsersProductsDao usersProductsDao = BarcodeScannerDatabase.getInstance(this.getApplicationContext()).usersProductsDao();
+        userProducts = usersProductsDao.getProductsForUser(UserManager.getInstance(this).getCurrentUser().getUserId());
+        productsRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        productsAdapter = new ProductsAdapter(userProducts, this, new OnItemClickListener<BarcodeModel>() {
+            @Override
+            public void itemClicked(BarcodeModel item) {
+                //Show clicked product
+                showClickedProduct(item);
+            }
+        });
+        productsRecyclerView.setAdapter(productsAdapter);
+
+    }
+
+    private void showClickedProduct(BarcodeModel item) {
+
     }
 }

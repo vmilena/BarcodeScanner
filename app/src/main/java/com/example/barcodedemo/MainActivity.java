@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void openSavedProducts() {
-//        SavedProductsActivity.start(this);
+        SavedProductsActivity.start(this);
     }
 
     private void openSayItActivity() {
