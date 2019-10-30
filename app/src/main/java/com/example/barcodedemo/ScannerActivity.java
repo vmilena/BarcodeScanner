@@ -275,12 +275,6 @@ public class ScannerActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
     @OnClick(R.id.saveProductButton)
     public void saveProduct() {
         User user = UserManager.getInstance(this).getCurrentUser();
@@ -290,6 +284,7 @@ public class ScannerActivity extends AppCompatActivity {
             usersProductsJoin.upc = product.getUpc();
             usersProductsJoin.userId = user.getUserId();
             usersProductsDao.insertUserProduct(usersProductsJoin);
+            Toast.makeText(this, "Product saved.", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(this, "You already saved this product.", Toast.LENGTH_SHORT).show();
         }

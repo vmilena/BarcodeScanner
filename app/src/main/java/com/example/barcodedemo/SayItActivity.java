@@ -124,9 +124,8 @@ public class SayItActivity extends AppCompatActivity implements OnItemClickListe
         List<BarcodeModel> barcodeModels = BarcodeScannerDatabase.getInstance(getApplicationContext())
                 .productDao()
                 .getProductsByName(sqliteFriendlySearchQuery);
-        if (barcodeModels.size() > 0) {
-            updateResults(barcodeModels);
-        } else {
+        updateResults(barcodeModels);
+        if (barcodeModels.size() == 0) {
             Toast.makeText(this, "Didn't find any products that contain '" + searchQuery + "'.", Toast.LENGTH_SHORT).show();
         }
     }

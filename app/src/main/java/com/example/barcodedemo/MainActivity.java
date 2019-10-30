@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void openSignInSignOutActivity() {
         SignInSignUpActivity.start(this);
-        finish();
     }
 
     private void openSavedProducts() {

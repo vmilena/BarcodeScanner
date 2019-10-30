@@ -28,6 +28,7 @@ public class SignInSignUpActivity extends AppCompatActivity {
 
     public static void start(Context context) {
         Intent starter = new Intent(context, SignInSignUpActivity.class);
+        starter.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         context.startActivity(starter);
     }
 
