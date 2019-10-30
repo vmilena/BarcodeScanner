@@ -159,10 +159,16 @@ public class ScannerActivity extends AppCompatActivity {
             task.addOnSuccessListener(firebaseVisionBarcodes -> {
                 //Since it is possible to scan multiple barcodes in one image
                 //In order to simplify the code we will always show the first one
+                if (!firebaseVisionBarcodes.isEmpty()) {
                     lookupInDatabases(firebaseVisionBarcodes.get(Constants.INDEX_FIRST).getRawValue());
+                } else {
+                    loader.setVisibility(View.GONE);
+                    Toast.makeText(getApplicationContext(), "No barcodes found", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
             }).addOnFailureListener(e -> {
                 loader.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(), "BARCODE DETECTION FAILED", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Barcode detection failed", Toast.LENGTH_SHORT).show();
                 finish();
             });
         }
@@ -232,13 +238,13 @@ public class ScannerActivity extends AppCompatActivity {
                             showProduct(product);
                         } else {
                             loader.setVisibility(View.GONE);
-                            Toast.makeText(getApplicationContext(), "SCANNED BARCODE WAS NOT FOUND.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Barcode was not found.", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(String message) {
-                        Toast.makeText(getApplicationContext(), "SCANNED BARCODE WAS NOT FOUND.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Barcode was not found.", Toast.LENGTH_SHORT).show();
                         loader.setVisibility(View.GONE);
                         finish();
                     }
